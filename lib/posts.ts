@@ -18,6 +18,13 @@ type ExtractedPostData = {
   title: string;
 };
 
+const errorPostData = {
+  id: "error",
+  contentHtml: "",
+  date: "",
+  title: "",
+};
+
 export const getSortedPostsData = async () => {
   const allPostsData: PostData[] = await getAllPostsData();
 
@@ -57,21 +64,25 @@ const getPostDataFromFileName = async (fileName: string) => {
 
 export const getPostDataFromId = async (id: string) => {
   const fullPath = path.join(postsDirectory, `${id}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
+  try {
+    const fileContents = fs.readFileSync(fullPath, "utf8");
 
-  // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents);
+    // Use gray-matter to parse the post metadata section
+    const matterResult = matter(fileContents);
 
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+    // Use remark to convert markdown into HTML string
+    const processedContent = await remark()
+      .use(html)
+      .process(matterResult.content);
+    const contentHtml = processedContent.toString();
 
-  // Combine the data with the id
-  return {
-    id,
-    contentHtml,
-    ...(matterResult.data as ExtractedPostData),
-  };
+    // Combine the data with the id
+    return {
+      id,
+      contentHtml,
+      ...(matterResult.data as ExtractedPostData),
+    };
+  } catch (error) {
+    return errorPostData;
+  }
 };

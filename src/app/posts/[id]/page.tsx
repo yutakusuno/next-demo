@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getAllPostIds, getPostDataFromId } from "../../../../lib/posts";
 import type { PostData } from "../../../../lib/posts";
 import Date from "../../../../components/date";
+import NotFound from "../../not-found";
 
 export const metadata = {
   title: "post",
@@ -18,6 +19,8 @@ export const generateStaticParams = async () => {
 const Post = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const postData: PostData = await getPostDataFromId(id);
+
+  if (postData.id == "error") return NotFound();
 
   return (
     <>

@@ -12,25 +12,13 @@ const Home = async () => {
   return (
     <>
       <section>
-        <h1>
-          read
-          {postData.map(({ id }) => (
-            <Link href={`posts/${id}`} key={id}>
-              {id}!
-            </Link>
-          ))}
-        </h1>
-        <h2>Blog</h2>
+        <h1>Blog</h1>
         <ul>
-          {postData.map(({ id, date, title, contentHtml }) => (
+          {postData.map(({ id, date, title }) => (
             <li key={id}>
-              {title}
+              <Link href={`posts/${id}`}>{title}</Link>
               <br />
-              {id}
-              <br />
-              {date}
-              <br />
-              <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              <small>{date}</small>
             </li>
           ))}
         </ul>
