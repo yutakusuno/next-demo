@@ -1,43 +1,42 @@
 import Link from "next/link";
-import { getSortedPostsData, getAllPostIds } from "../../lib/posts";
+import { getSortedPostsData } from "../../lib/posts";
+import type { PostData } from "../../lib/posts";
 
 export const metadata = {
   title: "top",
 };
 
-async function getPosts() {
-  const allPosts = await getSortedPostsData();
-  return allPosts;
-}
-
-export default async function Home() {
-  const posts = await getPosts();
-  const res: { params: { id: string } }[] = await getAllPostIds();
+const Home = async () => {
+  const postData: PostData[] = await getSortedPostsData();
 
   return (
     <>
       <section>
         <h1>
           read
-          {res.map((v) => (
-            <Link href="posts/pre-rendering" key={v.params.id}>
-              {v.params.id}!
+          {postData.map(({ id }) => (
+            <Link href="posts/pre-rendering" key={id}>
+              {id}!
             </Link>
           ))}
         </h1>
         <h2>Blog</h2>
         <ul>
-          {posts.map(({ id, date, title }) => (
+          {postData.map(({ id, date, title, contentHtml }) => (
             <li key={id}>
               {title}
               <br />
               {id}
               <br />
               {date}
+              <br />
+              <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
             </li>
           ))}
         </ul>
       </section>
     </>
   );
-}
+};
+
+export default Home;

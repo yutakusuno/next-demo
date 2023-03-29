@@ -1,23 +1,24 @@
 import Link from "next/link";
 import type { FC } from "react";
 import Image from "next/image";
-import { getAllPostIds, getPostData } from "../../../../lib/posts";
+import { getAllPostIds, getPostDataFromId } from "../../../../lib/posts";
 import type { PostData } from "../../../../lib/posts";
 
 export const metadata = {
   title: "post",
 };
 
-export async function generateStaticParams() {
-  const res = await getAllPostIds();
+export const generateStaticParams = async () => {
+  const res = getAllPostIds();
   return res.map((v) => ({
     id: v.params.id,
   }));
-}
+};
 
-export default function Post({ params }: { params: { id: string } }) {
+const Post = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const postData: PostData = getPostData(id);
+  const postData: PostData = await getPostDataFromId(id);
+
   return (
     <>
       <h1>
@@ -35,10 +36,14 @@ export default function Post({ params }: { params: { id: string } }) {
         {postData.id}
         <br />
         {postData.date}
+        <br />
+        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
       </ul>
       <h2>
         <Link href="/">top page!</Link>
       </h2>
     </>
   );
-}
+};
+
+export default Post;
