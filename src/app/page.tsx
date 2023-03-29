@@ -15,7 +15,7 @@ const Home = async () => {
         <h1>
           read
           {postData.map(({ id }) => (
-            <Link href="posts/pre-rendering" key={id}>
+            <Link href={`posts/${id}`} key={id}>
               {id}!
             </Link>
           ))}

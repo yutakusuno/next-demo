@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { FC } from "react";
 import Image from "next/image";
 import { getAllPostIds, getPostDataFromId } from "../../../../lib/posts";
 import type { PostData } from "../../../../lib/posts";
+import Date from "../../../../components/date";
 
 export const metadata = {
   title: "post",
@@ -35,7 +35,7 @@ const Post = async ({ params }: { params: { id: string } }) => {
         <br />
         {postData.id}
         <br />
-        {postData.date}
+        <Date dateString={postData.date} />
         <br />
         <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
       </ul>
